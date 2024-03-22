@@ -21,9 +21,10 @@ async def retranslate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.from_user.username != T2LOGSEQ_ADMIN_USERNAME:
         return
 
-    current_file = f"{datetime.now().strftime(T2LOGSEQ_FILE_FORMAT)}.md"
+    message_date = update.message.date
+    current_file = f"{message_date.strftime(T2LOGSEQ_FILE_FORMAT)}.md"
     with open(os.path.join(T2LOGSEQ_JOURNALS_PATH, current_file), "a") as f:
-        print("\n-", datetime.now().strftime(T2LOGSEQ_TIME_FORMAT), file=f)
+        print("\n-", message_date.strftime(T2LOGSEQ_TIME_FORMAT), file=f)
         print("\t-", update.message.text, file=f)
 
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Got it")
