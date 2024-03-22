@@ -1,10 +1,16 @@
+import datetime
 import logging
 import os
-from datetime import datetime
 
 from dotenv import load_dotenv
 from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+from telegram.ext import (
+    ApplicationBuilder,
+    ContextTypes,
+    Defaults,
+    MessageHandler,
+    filters,
+)
 
 load_dotenv()
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -35,7 +41,8 @@ if __name__ == "__main__":
         print("Invalid journals path")
         os.exit(1)
 
-    application = ApplicationBuilder().token(T2LOGSEQ_BOT_TOKEN).connect_timeout(1000).build()
+    defaults = Defaults(tzinfo=datetime.datetime.now().astimezone().tzinfo)
+    application = ApplicationBuilder().token(T2LOGSEQ_BOT_TOKEN).defaults(defaults).connect_timeout(1000).build()
 
     retranslate_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), retranslate)
     application.add_handler(retranslate_handler)
